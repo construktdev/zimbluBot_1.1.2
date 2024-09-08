@@ -1,0 +1,20 @@
+# Der Token des Bots
+token=MTI3ODMzNDAzNTk3NzgzMDQ1Mw.GzXRIn._aItf4oYFV7edsthk5C36UzNpEcJZPi8SzcQWs
+
+# Die Kategorie wo Ticketkanäle erstellt werden sollen
+ticket-category-id=1256879561229078548
+
+# Die Rolle welche "Ticket-Admin" ist
+mod-role-id=1278356703888412723
+
+# Die Kategorie wo temporäre Sprachkanäle erstellt werden sollen
+temp-category-id=1278398409392259195
+
+# Der Kanal Name wo bei betreten ein Temporärer kanal erstellt werden soll (Groß- und Kleinschreibung!!!!!!!)
+temp-create-channel=1278400814611955732
+
+# Ob der Bot im nächsten angegeben Channel Events loggen soll (true=ja false=nein)
+logging=true
+
+# Der Kanal in welchem der Bots sendet, wenn etwas ausgeführt wirds (REQUIRED!)
+logging-channel=1279042280250015744
