@@ -16,6 +16,49 @@ public class DiscordLogger extends ListenerAdapter {
     public static boolean log(String event, User user, TextChannel channel, JDA jda, @Nullable String before, @Nullable String after, @Nullable String content) {
         BotConfig config = new BotConfig();
         boolean loggingEnabled = false;
+
+        if (user == null && channel == null) {
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("🧾 • ZimbluBot Logging");
+            eb.setDescription(event);
+            eb.addField("Benutzer", "Unable to fetch due to JDA limitations", true);
+            eb.addField("Channel", "Unable to fetch due to JDA limitations", true);
+            eb.setColor(Color.BLUE);
+            eb.setFooter("\uD83E\uDD16 • ZimbluBot Logger", jda.getSelfUser().getAvatarUrl());
+            TextChannel logChannel = jda.getTextChannelById(config.getProperty("logging-channel"));
+            assert logChannel != null;
+            logChannel.sendMessageEmbeds(eb.build()).queue();
+            return true;
+        }
+
+        if (user == null) {
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("🧾 • ZimbluBot Logging");
+            eb.setDescription(event);
+            eb.addField("Benutzer", "Unable to fetch due to JDA limitations", true);
+            eb.addField("Channel", channel.getName(), true);
+            eb.setColor(Color.BLUE);
+            eb.setFooter("\uD83E\uDD16 • ZimbluBot Logger", jda.getSelfUser().getAvatarUrl());
+            TextChannel logChannel = jda.getTextChannelById(config.getProperty("logging-channel"));
+            assert logChannel != null;
+            logChannel.sendMessageEmbeds(eb.build()).queue();
+            return true;
+        }
+
+        if (channel == null) {
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("🧾 • ZimbluBot Logging");
+            eb.setDescription(event);
+            eb.addField("Benutzer", user.getName(), true);
+            eb.addField("Channel", "Unable to fetch due to JDA limitations", true);
+            eb.setColor(Color.BLUE);
+            eb.setFooter("\uD83E\uDD16 • ZimbluBot Logger", jda.getSelfUser().getAvatarUrl());
+            TextChannel logChannel = jda.getTextChannelById(config.getProperty("logging-channel"));
+            assert logChannel != null;
+            logChannel.sendMessageEmbeds(eb.build()).queue();
+            return true;
+        }
+
         try {
            loggingEnabled = Boolean.parseBoolean(config.getProperty("logging"));
         } catch (Exception e) {
