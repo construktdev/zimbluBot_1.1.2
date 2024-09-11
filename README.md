@@ -8,9 +8,9 @@ Discord für das [Zimblu Netzwerk](https://dc.zimblu.net)
 - Ticket System
 - Configuration Datei
 - Advanced CLI Logger
+- Temporäre Sprachkanäle (join2create)
+- Discord Logging
 
 ### Geplantes
-- Discord Logging
 - Mehr Commands
-- Join2Create System
 - ReactionRoles
