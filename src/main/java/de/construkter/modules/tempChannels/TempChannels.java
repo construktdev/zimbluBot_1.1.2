@@ -30,6 +30,7 @@ public class TempChannels extends ListenerAdapter {
                 } catch (InterruptedException e) {
                     Logger.event(ColorManager.RED + "[!] " + ColorManager.GREEN + "Failed to delete temp channel");
                 }
+                event.getChannelLeft().delete().queue();
             }
         }
     }
