@@ -6,6 +6,8 @@ import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
 import de.construkter.modules.logging.DiscordLogger;
 import de.construkter.modules.logging.LoggingListener;
+import de.construkter.modules.tempChannels.TempChannels;
+import de.construkter.modules.tempChannels.VoiceListener;
 import de.construkter.modules.ticket.CloseCommand;
 import de.construkter.modules.ticket.OpenTicket;
 import de.construkter.modules.ticket.TicketPanel;
@@ -13,16 +15,19 @@ import de.construkter.ressources.BotConfig;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
+import java.util.Objects;
+
 public class Main {
     public static void main(String[] args) {
         Logger.event("Starting Log-In to the Discord-API...");
         BotConfig config = new BotConfig();
-        JDA jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES)
+        JDA jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
                 .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                 .addEventListeners(new OnReady())
                 .addEventListeners(new TicketPanel())
@@ -33,6 +38,9 @@ public class Main {
                 .addEventListeners(new ModalListener())
                 .addEventListeners(new CloseCommand())
                 .addEventListeners(new DiscordLogger())
+                .addEventListeners(new TempChannels())
+                .addEventListeners(new VoiceListener())
+                .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         Logger.event("Updating Commands");
         jda.updateCommands().addCommands(
