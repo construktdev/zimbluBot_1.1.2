@@ -17,17 +17,14 @@ public class BotConfig {
     }
 
     private void loadProperties() {
-        String fileName = "bot.txt";  // Name der Textdatei, die gelesen werden soll
+        String fileName = "bot.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Entferne führende und nachfolgende Leerzeichen
                 line = line.trim();
-                // Überspringe leere Zeilen und Kommentare
                 if (line.isEmpty() || line.startsWith("#")) {
                     continue;
                 }
-                // Teile die Zeile in Schlüssel und Wert auf
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     properties.setProperty(parts[0].trim(), parts[1].trim());

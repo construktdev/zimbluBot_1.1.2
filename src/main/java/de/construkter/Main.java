@@ -1,6 +1,7 @@
 package de.construkter;
 
 import de.construkter.commands.SlashCommandListener;
+import de.construkter.events.MemberEvent;
 import de.construkter.events.OnReady;
 import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
@@ -15,13 +16,10 @@ import de.construkter.ressources.BotConfig;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-
-import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
@@ -40,6 +38,7 @@ public class Main {
                 .addEventListeners(new DiscordLogger())
                 .addEventListeners(new TempChannels())
                 .addEventListeners(new VoiceListener())
+                .addEventListeners(new MemberEvent())
                 .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         Logger.event("Updating Commands");
@@ -56,6 +55,6 @@ public class Main {
                 Commands.slash("embed", "[UTILS] Erstelle einen Embed und sende ihn [ADMIN]").setGuildOnly(true),
                 Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true)
         ).queue();
-        Logger.event("Succesfully updated all Commands");
+        Logger.event("Successfully updated all Commands");
     }
 }

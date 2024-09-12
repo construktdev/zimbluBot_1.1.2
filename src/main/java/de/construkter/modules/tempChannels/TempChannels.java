@@ -4,7 +4,6 @@ import de.construkter.ressources.BotConfig;
 import de.construkter.utils.ColorManager;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
