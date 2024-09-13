@@ -9,9 +9,7 @@ import de.construkter.modules.logging.DiscordLogger;
 import de.construkter.modules.logging.LoggingListener;
 import de.construkter.modules.tempChannels.TempChannels;
 import de.construkter.modules.tempChannels.VoiceListener;
-import de.construkter.modules.ticket.CloseCommand;
-import de.construkter.modules.ticket.OpenTicket;
-import de.construkter.modules.ticket.TicketPanel;
+import de.construkter.modules.ticket.*;
 import de.construkter.ressources.BotConfig;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.JDA;
@@ -39,6 +37,8 @@ public class Main {
                 .addEventListeners(new TempChannels())
                 .addEventListeners(new VoiceListener())
                 .addEventListeners(new MemberEvent())
+                .addEventListeners(new ChannelPermissionManager())
+                .addEventListeners(new CloseRequest())
                 .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         Logger.event("Updating Commands");
@@ -53,7 +53,8 @@ public class Main {
                         .addOption(OptionType.STRING, "emoji", "Der Emoji (KEINE DISCORD EMOJIS)")
                         .setGuildOnly(true),
                 Commands.slash("embed", "[UTILS] Erstelle einen Embed und sende ihn [ADMIN]").setGuildOnly(true),
-                Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true)
+                Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true),
+                Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true)
         ).queue();
         Logger.event("Successfully updated all Commands");
     }
