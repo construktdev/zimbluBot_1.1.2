@@ -53,10 +53,8 @@ public class SlashCommandListener extends ListenerAdapter {
         long freeMem = runtime.freeMemory();
         long totalMem = runtime.totalMemory();
 
-        // Calculate the used memory (total - free)
         long usedMem = totalMem - freeMem;
 
-        // Convert to MB and round down to the nearest integer
         int memUsageMB = (int) Math.floor((usedMem / 1024) / 1024);
 
         return memUsageMB;
