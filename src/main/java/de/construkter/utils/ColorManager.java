@@ -11,7 +11,6 @@ public class ColorManager {
     public static final String CYAN = "\033[0;36m";    // CYAN
     public static final String WHITE = "\033[0;37m";   // WHITE
 
-    // ANSI escape codes for text styles
     public static final String BOLD = "\033[1m";    // BOLD
     public static final String UNDERLINE = "\033[4m";   // UNDERLINE
     public static final String REVERSED = "\033[7m";

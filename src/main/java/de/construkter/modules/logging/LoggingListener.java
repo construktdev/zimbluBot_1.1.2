@@ -29,7 +29,6 @@ public class LoggingListener extends ListenerAdapter {
         String messageId = message.getId();
         String messageContent = message.getContentRaw();
 
-        // Cache the message content
         messageCache.put(messageId, messageContent);
     }
     @Override
@@ -48,7 +47,7 @@ public class LoggingListener extends ListenerAdapter {
             String deletedMessageContent = messageCache.get(messageId);
             DiscordLogger.log("MessageDelete", null, event.getChannel().asTextChannel(), event.getJDA(), null, null, deletedMessageContent);
         } else {
-            Logger.event("Message was not cached.");
+            Logger.event("Deleted message was not cached.");
         }
     }
 

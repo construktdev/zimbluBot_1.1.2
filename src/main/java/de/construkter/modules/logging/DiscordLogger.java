@@ -16,6 +16,12 @@ public class DiscordLogger extends ListenerAdapter {
     public static boolean log(String event, User user, TextChannel channel, JDA jda, @Nullable String before, @Nullable String after, @Nullable String content) {
         BotConfig config = new BotConfig();
         boolean loggingEnabled = false;
+        try {
+            loggingEnabled = Boolean.parseBoolean(config.getProperty("logging"));
+        } catch (Exception e) {
+            Logger.event(ColorManager.RED + "[!] " + ColorManager.GREEN + "Du hast einen falschen Wert bei bot.txt - logging eingegeben (true oder false)");
+            return false;
+        }
 
         if (user == null && channel == null) {
             EmbedBuilder eb = new EmbedBuilder();
@@ -59,12 +65,6 @@ public class DiscordLogger extends ListenerAdapter {
             return true;
         }
 
-        try {
-           loggingEnabled = Boolean.parseBoolean(config.getProperty("logging"));
-        } catch (Exception e) {
-            Logger.event(ColorManager.RED + "[!] " + ColorManager.GREEN + "Du hast einen falschen Wert bei bot.txt - logging eingegeben (true oder false)");
-            return false;
-        }
         if (loggingEnabled) {
             if (event.equals("MessageUpdate")) {
                 EmbedBuilder eb = new EmbedBuilder();

@@ -21,7 +21,7 @@ public class ModalListener extends ListenerAdapter {
                     .setFooter(footer, event.getJDA().getSelfUser().getAvatarUrl())
                     .setColor(Color.BLUE);
             Objects.requireNonNull(event.getJDA().getTextChannelById(cid)).sendMessageEmbeds(embed.build()).queue();
-            event.reply("Sending the built Embed in <#" + cid + "> " + event.getUser().getAsMention()).queue();
+            event.reply("Sending the built Embed in <#" + cid + "> ").queue();
         }
     }
 }

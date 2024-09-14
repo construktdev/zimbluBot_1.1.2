@@ -28,5 +28,5 @@ public class CommandListener extends ListenerAdapter {
                  event.reply("❌ » Du hast dafür keine Rechte").setEphemeral(true).queue();
              }
          }
-     }
+    }
 }

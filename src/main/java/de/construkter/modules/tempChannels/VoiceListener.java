@@ -1,6 +1,5 @@
 package de.construkter.modules.tempChannels;
 
-import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
