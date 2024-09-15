@@ -48,7 +48,7 @@ public class SlashCommandListener extends ListenerAdapter {
         event.replyEmbeds(eb.build()).queue();
     }
 
-    private static int getRAM() {
+    public static int getRAM() {
         Runtime runtime = Runtime.getRuntime();
         long freeMem = runtime.freeMemory();
         long totalMem = runtime.totalMemory();

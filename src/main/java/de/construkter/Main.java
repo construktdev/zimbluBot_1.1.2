@@ -1,6 +1,7 @@
 package de.construkter;
 
 import de.construkter.commands.SlashCommandListener;
+import de.construkter.commands.TextBasedListener;
 import de.construkter.events.MemberEvent;
 import de.construkter.events.OnReady;
 import de.construkter.modules.embedBuilder.CommandListener;
@@ -39,6 +40,7 @@ public class Main {
                 .addEventListeners(new MemberEvent())
                 .addEventListeners(new ChannelPermissionManager())
                 .addEventListeners(new CloseRequest())
+                .addEventListeners(new TextBasedListener())
                 .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         Logger.event("Updating Commands");
