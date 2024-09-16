@@ -1,16 +1,21 @@
 package de.construkter.modules.logging;
 
-import de.construkter.utils.Logger;
+import de.construkter.ressources.BotConfig;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateIconEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateOwnerEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
@@ -18,9 +23,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static de.construkter.Main.jda;
 
 public class LoggingListener extends ListenerAdapter {
-
+    EmbedBuilder eb = new EmbedBuilder();
+    BotConfig config = new BotConfig();
+    TextChannel logChannel = jda.getTextChannelById(config.getProperty("logging-channel"));
     private final Map<String, String> messageCache = new HashMap<>();
 
     @Override
@@ -36,7 +46,13 @@ public class LoggingListener extends ListenerAdapter {
        Message message = event.getMessage();
         String contentNew = event.getMessage().getContentRaw();
         String contentOld = message.getContentDisplay();
-        DiscordLogger.log("MessageUpdate", event.getAuthor(), event.getChannel().asTextChannel(), event.getJDA(), contentOld, contentNew, null);
+        eb.setTitle("Nachricht bearbeitet");
+        eb.setDescription("**User: ** " + event.getAuthor().getName() + "\n" +
+                "**Kanal: ** " + event.getChannel().getName() + "\n" +
+                "**Davor: ** " + contentNew + "\n" +
+                "**Nachher: ** " + contentOld);
+        eb.setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
@@ -45,51 +61,99 @@ public class LoggingListener extends ListenerAdapter {
 
         if (messageCache.containsKey(messageId)) {
             String deletedMessageContent = messageCache.get(messageId);
-            DiscordLogger.log("MessageDelete", null, event.getChannel().asTextChannel(), event.getJDA(), null, null, deletedMessageContent);
+            eb.setTitle("Nachricht gelöscht");
+            eb.setDescription("**User:** null" + "\n" +
+                    "**Kanal: ** " + event.getChannel().getName() + "\n" +
+                    "**Nachricht: ** " + deletedMessageContent);
         } else {
-            Logger.event("Deleted message was not cached.");
+            eb.setTitle("Nachricht gelöscht");
+            eb.setDescription("**User: ** null" + "\n" +
+                    "**Kanal: ** " + event.getChannel().getName() + "\n" +
+                    "**Nachricht: ** " + " Message wasn't cached");
         }
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onChannelCreate(ChannelCreateEvent event) {
         Channel channel = event.getChannel();
-        DiscordLogger.log("ChannelCreate", null, event.getChannel().asTextChannel(), event.getJDA(), null, null, null);
+        eb.setTitle("Kanal erstellt");
+        eb.setDescription("**Channel: ** " + channel.getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onChannelDelete(ChannelDeleteEvent event) {
         Channel channel = event.getChannel();
-        DiscordLogger.log("ChannelDelete", null, event.getChannel().asTextChannel(), event.getJDA(), null, null, null);
+        eb.setTitle("Kanal gelöscht");
+        eb.setDescription("**Channel: ** " + channel.getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildBan(GuildBanEvent event) {
-        DiscordLogger.log("GuildBan", event.getUser(), null, event.getJDA(), null, null, null);
+        eb.setTitle("Nutzer gebannt");
+        eb.setDescription("**Moderator: ** " + event.getUser().getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildUnban(GuildUnbanEvent event) {
-        DiscordLogger.log("GuildUnban", event.getUser(), null, event.getJDA(), null, null, null);
+        eb.setTitle("Nutzer entbannt");
+        eb.setDescription("**Moderator: ** " + event.getUser().getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-        DiscordLogger.log("GuildMemberLeave", event.getUser(), null, event.getJDA(), null, null, null);
+        eb.setTitle("Nutzer Server leave");
+        eb.setDescription("**Nutzer: ** " + event.getUser().getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        DiscordLogger.log("GuildMemberJoin", event.getUser(), null, event.getJDA(), null, null, null);
+        eb.setTitle("Nutzer Server join");
+        eb.setDescription("**Nutzer: ** " + event.getUser().getName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildUpdateIcon(GuildUpdateIconEvent event) {
-        DiscordLogger.log("GuildUpdateIcon", null, null, event.getJDA(), null, null, null);
+        eb.setTitle("Server Icon update");
+        eb.setDescription("Thumbnail: Old Icon \n**Image:** New Icon");
+        eb.setThumbnail(event.getOldIconUrl());
+        eb.setImage(event.getNewIconUrl());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override
     public void onGuildUpdateName(GuildUpdateNameEvent event) {
-        DiscordLogger.log("GuildUpdateName", null, null, event.getJDA(), null, null, null);
+        eb.setTitle("Server Name update");
+        eb.setDescription("**New-Name: ** " + event.getNewName()
+                + " \n**Old-Name: ** " + event.getOldName());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
+    }
+
+    @Override
+    public void onGuildUpdateOwner(GuildUpdateOwnerEvent event) {
+        eb.setTitle("Server Owner update");
+        eb.setDescription("**Old-Owner: ** " + event.getOldOwner() + " \n**New-Owner: ** " + event.getNewOwner());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
+    }
+
+    @Override
+    public void onGuildInviteCreate(GuildInviteCreateEvent event) {
+        eb.setTitle("Server Invite Create");
+        eb.setDescription("**User:** " + Objects.requireNonNull(event.getInvite().getInviter()).getName() + "\n" +
+                "**Einladung:** " + event.getInvite().getCode());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
+    }
+
+    @Override
+    public void onGuildInviteDelete(GuildInviteDeleteEvent event) {
+        eb.setTitle("Server Invite Delete");
+        eb.setDescription("**Einladung:** " + event.getCode());
+        logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 }
