@@ -21,10 +21,11 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Main {
+    public static JDA jda = null;
     public static void main(String[] args) {
         Logger.event("Starting Log-In to the Discord-API...");
         BotConfig config = new BotConfig();
-        JDA jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
+        jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
                 .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                 .addEventListeners(new OnReady())
                 .addEventListeners(new TicketPanel())
@@ -59,5 +60,9 @@ public class Main {
                 Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true)
         ).queue();
         Logger.event("Successfully updated all Commands");
+    }
+
+    public static void shutdown() {
+        jda.shutdown();
     }
 }

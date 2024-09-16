@@ -1,5 +1,6 @@
 package de.construkter.commands;
 
+import de.construkter.Main;
 import de.construkter.utils.FakeJSONResponse;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,6 +19,7 @@ public class TextBasedListener extends ListenerAdapter {
                 break;
             case "!debug-info":
                 debug(event);
+                break;
         }
     }
 
@@ -25,7 +27,7 @@ public class TextBasedListener extends ListenerAdapter {
         if (event.getAuthor().getName().equalsIgnoreCase("construkter")) {
             event.getMessage().delete().queue();
             Logger.event("Stopping...");
-            event.getJDA().shutdown();
+            Main.shutdown();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -43,7 +45,7 @@ public class TextBasedListener extends ListenerAdapter {
             Message msg = event.getMessage();
             EmbedBuilder eb = new EmbedBuilder();
             eb.setTitle("Debug-Infos");
-            eb.setDescription("RAM Usage: " + SlashCommandListener.getRAM() + "MB / 1024MB\n" +
+            eb.setDescription("RAM Usage: " + SlashCommandListener.getRAM() + "MB / 512MB\n" +
                     "Status: " + event.getJDA().getStatus() + "\n" +
                     "Gateway Ping: " + event.getJDA().getGatewayPing() + "ms \n" +
                     "Enabled Intents: " + event.getJDA().getGatewayIntents());
