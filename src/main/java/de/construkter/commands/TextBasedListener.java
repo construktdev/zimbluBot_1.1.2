@@ -1,6 +1,5 @@
 package de.construkter.commands;
 
-import de.construkter.Main;
 import de.construkter.utils.FakeJSONResponse;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,7 +26,6 @@ public class TextBasedListener extends ListenerAdapter {
         if (event.getAuthor().getName().equalsIgnoreCase("construkter")) {
             event.getMessage().delete().queue();
             Logger.event("Stopping...");
-            Main.shutdown();
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {

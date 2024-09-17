@@ -6,7 +6,6 @@ import de.construkter.events.MemberEvent;
 import de.construkter.events.OnReady;
 import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
-import de.construkter.modules.logging.DiscordLogger;
 import de.construkter.modules.logging.LoggingListener;
 import de.construkter.modules.tempChannels.TempChannels;
 import de.construkter.modules.tempChannels.VoiceListener;
@@ -21,27 +20,26 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Main {
-    public static JDA jda = null;
+    static BotConfig config = new BotConfig();
+
     public static void main(String[] args) {
         Logger.event("Starting Log-In to the Discord-API...");
-        BotConfig config = new BotConfig();
-        jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
+        JDA jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
                 .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                 .addEventListeners(new OnReady())
                 .addEventListeners(new TicketPanel())
                 .addEventListeners(new OpenTicket())
                 .addEventListeners(new SlashCommandListener())
-                .addEventListeners(new LoggingListener())
                 .addEventListeners(new CommandListener())
                 .addEventListeners(new ModalListener())
                 .addEventListeners(new CloseCommand())
-                .addEventListeners(new DiscordLogger())
                 .addEventListeners(new TempChannels())
                 .addEventListeners(new VoiceListener())
                 .addEventListeners(new MemberEvent())
                 .addEventListeners(new ChannelPermissionManager())
                 .addEventListeners(new CloseRequest())
                 .addEventListeners(new TextBasedListener())
+                .addEventListeners(new LoggingListener())
                 .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         Logger.event("Updating Commands");
@@ -57,12 +55,9 @@ public class Main {
                         .setGuildOnly(true),
                 Commands.slash("embed", "[UTILS] Erstelle einen Embed und sende ihn [ADMIN]").setGuildOnly(true),
                 Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true),
-                Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true)
+                Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true),
+                Commands.slash("about", "[UTILS] Zeige dir alle Funktionen zum Zimblu Netzwerk an").setGuildOnly(true)
         ).queue();
         Logger.event("Successfully updated all Commands");
-    }
-
-    public static void shutdown() {
-        jda.shutdown();
     }
 }

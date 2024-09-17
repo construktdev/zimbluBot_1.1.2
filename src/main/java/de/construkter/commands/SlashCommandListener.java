@@ -18,6 +18,8 @@ public class SlashCommandListener extends ListenerAdapter {
             case "stats":
                 stats(event);
                 break;
+            case "about":
+                about(event);
         }
         Logger.event(Objects.requireNonNull(event.getMember()).getEffectiveName() + " hat den Befehl /" + event.getName() + " in " + Objects.requireNonNull(event.getGuild()).getName() + " genutzt");
     }
@@ -58,5 +60,16 @@ public class SlashCommandListener extends ListenerAdapter {
         int memUsageMB = (int) Math.floor((usedMem / 1024) / 1024);
 
         return memUsageMB;
+    }
+
+    private static void about(SlashCommandInteractionEvent event) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Über das Zimblu Netzwerk");
+        eb.setDescription("Zimblu bietet ein außergewöhnliches Minecraft-Roleplay-Erlebnis mit fast\n" +
+                "ausschließlich selbst entwickelten Inhalten, die eine tiefgreifende und immersive\n" +
+                "Welt schaffen. Neben Roleplay bieten wir auch andere spannende Spielmodi an.\n" +
+                "Unser Netzwerk ist für Java- und Bedrock-Spieler zugänglich.");
+        eb.setColor(Color.GREEN);
+        event.replyEmbeds(eb.build()).queue();
     }
 }

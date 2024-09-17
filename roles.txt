@@ -1,0 +1,3 @@
+# IDs der Nachricht mit ReactionRoles
+message=27348927983472983
+# Format: name_der_rolle=rollen_id

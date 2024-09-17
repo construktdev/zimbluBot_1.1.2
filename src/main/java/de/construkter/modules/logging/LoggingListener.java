@@ -2,6 +2,7 @@ package de.construkter.modules.logging;
 
 import de.construkter.ressources.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -25,16 +26,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static de.construkter.Main.jda;
+
 
 public class LoggingListener extends ListenerAdapter {
     EmbedBuilder eb = new EmbedBuilder();
     BotConfig config = new BotConfig();
-    TextChannel logChannel = jda.getTextChannelById(config.getProperty("logging-channel"));
+
     private final Map<String, String> messageCache = new HashMap<>();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         Message message = event.getMessage();
         String messageId = message.getId();
         String messageContent = message.getContentRaw();
@@ -43,6 +45,7 @@ public class LoggingListener extends ListenerAdapter {
     }
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
        Message message = event.getMessage();
         String contentNew = event.getMessage().getContentRaw();
         String contentOld = message.getContentDisplay();
@@ -57,6 +60,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(MessageDeleteEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         String messageId = event.getMessageId();
 
         if (messageCache.containsKey(messageId)) {
@@ -76,6 +80,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onChannelCreate(ChannelCreateEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         Channel channel = event.getChannel();
         eb.setTitle("Kanal erstellt");
         eb.setDescription("**Channel: ** " + channel.getName());
@@ -84,6 +89,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onChannelDelete(ChannelDeleteEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         Channel channel = event.getChannel();
         eb.setTitle("Kanal gelöscht");
         eb.setDescription("**Channel: ** " + channel.getName());
@@ -92,6 +98,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildBan(GuildBanEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer gebannt");
         eb.setDescription("**Moderator: ** " + event.getUser().getName());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -99,6 +106,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildUnban(GuildUnbanEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer entbannt");
         eb.setDescription("**Moderator: ** " + event.getUser().getName());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -106,6 +114,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer Server leave");
         eb.setDescription("**Nutzer: ** " + event.getUser().getName());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -113,6 +122,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer Server join");
         eb.setDescription("**Nutzer: ** " + event.getUser().getName());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -120,6 +130,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildUpdateIcon(GuildUpdateIconEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Icon update");
         eb.setDescription("Thumbnail: Old Icon \n**Image:** New Icon");
         eb.setThumbnail(event.getOldIconUrl());
@@ -129,6 +140,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildUpdateName(GuildUpdateNameEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Name update");
         eb.setDescription("**New-Name: ** " + event.getNewName()
                 + " \n**Old-Name: ** " + event.getOldName());
@@ -137,6 +149,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildUpdateOwner(GuildUpdateOwnerEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Owner update");
         eb.setDescription("**Old-Owner: ** " + event.getOldOwner() + " \n**New-Owner: ** " + event.getNewOwner());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -144,6 +157,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildInviteCreate(GuildInviteCreateEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Invite Create");
         eb.setDescription("**User:** " + Objects.requireNonNull(event.getInvite().getInviter()).getName() + "\n" +
                 "**Einladung:** " + event.getInvite().getCode());
@@ -152,6 +166,7 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onGuildInviteDelete(GuildInviteDeleteEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Invite Delete");
         eb.setDescription("**Einladung:** " + event.getCode());
         logChannel.sendMessageEmbeds(eb.build()).queue();
