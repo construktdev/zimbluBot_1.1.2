@@ -1,7 +1,9 @@
 package de.construkter.commands;
 
+import de.construkter.modules.uptimeMonitor.Uptimes;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -20,6 +22,13 @@ public class SlashCommandListener extends ListenerAdapter {
                 break;
             case "about":
                 about(event);
+                break;
+            case "status":
+                status(event);
+                break;
+            case "send-status-embed":
+                sendStatus(event);
+                break;
         }
         Logger.event(Objects.requireNonNull(event.getMember()).getEffectiveName() + " hat den Befehl /" + event.getName() + " in " + Objects.requireNonNull(event.getGuild()).getName() + " genutzt");
     }
@@ -28,7 +37,9 @@ public class SlashCommandListener extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("🤖 • ZimbluBot Hilfe");
         eb.setDescription("'/help' - Zeigt dir diese Liste \n" +
-                "'/stats' - zeigt dir ein paar stats zum Bot wie Server, RAM etc.");
+                "'/stats' - zeigt dir ein paar stats zum Bot wie Server, RAM etc. \n" +
+                "'/about' - Wer wir sind und was wir machen \n" +
+                "'/status' - Zeigt dir an welche Server online sind");
         eb.setFooter("\uD83E\uDD16 • ZimbluBot", event.getJDA().getSelfUser().getAvatarUrl());
         eb.setColor(Color.BLUE);
         eb.setThumbnail(event.getJDA().getSelfUser().getAvatarUrl());
@@ -71,5 +82,88 @@ public class SlashCommandListener extends ListenerAdapter {
                 "Unser Netzwerk ist für Java- und Bedrock-Spieler zugänglich.");
         eb.setColor(Color.GREEN);
         event.replyEmbeds(eb.build()).queue();
+    }
+
+    private static void status(SlashCommandInteractionEvent event) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Status");
+        String description = "Proxy: ";
+        if (Uptimes.ping("127.0.0.1", 25565)) {
+            description += "✅\n";
+        } else {
+            description += "❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25566)) {
+            description += "Lobby: ✅\n";
+        } else {
+            description += "Lobby: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25567)) {
+            description += "Varo: ✅\n";
+        } else {
+            description += "Varo: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25568)) {
+            description += "JumpNRun: ✅\n";
+        } else {
+            description += "JumpNRun: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25569)) {
+            description += "SMP: ✅\n";
+        } else {
+            description += "SMP: ❌\n";
+        }
+        eb.setDescription(description);
+        eb.setColor(Color.GREEN);
+        eb.setFooter(event.getJDA().getSelfUser().getName(), event.getJDA().getSelfUser().getAvatarUrl());
+        event.replyEmbeds(eb.build()).queue();
+    }
+
+    private static void sendStatus(SlashCommandInteractionEvent event) {
+        if (!(Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR))) {
+            event.reply("Du hast dafür keine Rechte").setEphemeral(true).queue();
+            return;
+        }
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Status");
+        String description = "Proxy: ";
+        if (Uptimes.ping("127.0.0.1", 25565)) {
+            description += "✅\n";
+        } else {
+            description += "❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25566)) {
+            description += "Lobby: ✅\n";
+        } else {
+            description += "Lobby: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25567)) {
+            description += "Varo: ✅\n";
+        } else {
+            description += "Varo: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25568)) {
+            description += "JumpNRun: ✅\n";
+        } else {
+            description += "JumpNRun: ❌\n";
+        }
+
+        if (Uptimes.ping("127.0.0.1", 25569)) {
+            description += "SMP: ✅\n";
+        } else {
+            description += "SMP: ❌\n";
+        }
+        eb.setDescription(description);
+        eb.setColor(Color.GREEN);
+        eb.setFooter(event.getJDA().getSelfUser().getName(), event.getJDA().getSelfUser().getAvatarUrl());
+        event.reply("✅ » Erfolgreich. Setze in der Config die ID der Nachricht, das sie automatisch aktualisiert wird.").setEphemeral(true).queue();
+        event.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 }

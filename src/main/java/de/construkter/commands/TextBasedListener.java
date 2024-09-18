@@ -1,5 +1,6 @@
 package de.construkter.commands;
 
+import de.construkter.modules.uptimeMonitor.Uptimes;
 import de.construkter.utils.FakeJSONResponse;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -20,6 +21,7 @@ public class TextBasedListener extends ListenerAdapter {
                 debug(event);
                 break;
         }
+        Uptimes.runTask(event);
     }
 
     private static void stop(MessageReceivedEvent event) {

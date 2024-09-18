@@ -56,7 +56,9 @@ public class Main {
                 Commands.slash("embed", "[UTILS] Erstelle einen Embed und sende ihn [ADMIN]").setGuildOnly(true),
                 Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true),
                 Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true),
-                Commands.slash("about", "[UTILS] Zeige dir alle Funktionen zum Zimblu Netzwerk an").setGuildOnly(true)
+                Commands.slash("about", "[UTILS] Zeige dir alle Funktionen zum Zimblu Netzwerk an").setGuildOnly(true),
+                Commands.slash("status", "[UTILS] Zeigt dir welche Server online sind").setGuildOnly(true),
+                Commands.slash("send-status-embed", "[UTILS] Sende den Status embed").setGuildOnly(true)
         ).queue();
         Logger.event("Successfully updated all Commands");
     }
