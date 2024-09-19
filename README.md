@@ -10,7 +10,9 @@ Discord für das [Zimblu Netzwerk](https://dc.zimblu.net)
 - Advanced CLI Logger
 - Temporäre Sprachkanäle (join2create)
 - Discord Logging
+- Reaction Roles (nicht ganz fertig)
+- Uptime Manager
+- Status Embed
 
 ### Geplantes
 - Mehr Commands
-- ReactionRoles
