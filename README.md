@@ -12,7 +12,7 @@ Discord für das [Zimblu Netzwerk](https://dc.zimblu.net)
 - Discord Logging
 - Reaction Roles (nicht ganz fertig)
 - Uptime Manager
-- Status Embed
+- Status Embed mit automatischer Aktualisierung 
 
 ### Geplantes
 - Mehr Commands
