@@ -2,7 +2,6 @@ package de.construkter.modules.logging;
 
 import de.construkter.ressources.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -22,6 +21,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +36,6 @@ public class LoggingListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         Message message = event.getMessage();
         String messageId = message.getId();
         String messageContent = message.getContentRaw();
@@ -46,7 +45,8 @@ public class LoggingListener extends ListenerAdapter {
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
-       Message message = event.getMessage();
+        assert logChannel != null;
+        Message message = event.getMessage();
         String contentNew = event.getMessage().getContentRaw();
         String contentOld = message.getContentDisplay();
         eb.setTitle("Nachricht bearbeitet");
@@ -55,6 +55,7 @@ public class LoggingListener extends ListenerAdapter {
                 "**Davor: ** " + contentNew + "\n" +
                 "**Nachher: ** " + contentOld);
         eb.setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl());
+        eb.setTimestamp(Instant.now());
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -75,6 +76,8 @@ public class LoggingListener extends ListenerAdapter {
                     "**Kanal: ** " + event.getChannel().getName() + "\n" +
                     "**Nachricht: ** " + " Message wasn't cached");
         }
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -84,6 +87,8 @@ public class LoggingListener extends ListenerAdapter {
         Channel channel = event.getChannel();
         eb.setTitle("Kanal erstellt");
         eb.setDescription("**Channel: ** " + channel.getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -93,6 +98,8 @@ public class LoggingListener extends ListenerAdapter {
         Channel channel = event.getChannel();
         eb.setTitle("Kanal gelöscht");
         eb.setDescription("**Channel: ** " + channel.getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -101,6 +108,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer gebannt");
         eb.setDescription("**Moderator: ** " + event.getUser().getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -109,6 +118,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer entbannt");
         eb.setDescription("**Moderator: ** " + event.getUser().getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -117,6 +128,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer Server leave");
         eb.setDescription("**Nutzer: ** " + event.getUser().getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -125,6 +138,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Nutzer Server join");
         eb.setDescription("**Nutzer: ** " + event.getUser().getName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -135,6 +150,8 @@ public class LoggingListener extends ListenerAdapter {
         eb.setDescription("Thumbnail: Old Icon \n**Image:** New Icon");
         eb.setThumbnail(event.getOldIconUrl());
         eb.setImage(event.getNewIconUrl());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -144,6 +161,8 @@ public class LoggingListener extends ListenerAdapter {
         eb.setTitle("Server Name update");
         eb.setDescription("**New-Name: ** " + event.getNewName()
                 + " \n**Old-Name: ** " + event.getOldName());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -152,6 +171,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Owner update");
         eb.setDescription("**Old-Owner: ** " + event.getOldOwner() + " \n**New-Owner: ** " + event.getNewOwner());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -161,6 +182,8 @@ public class LoggingListener extends ListenerAdapter {
         eb.setTitle("Server Invite Create");
         eb.setDescription("**User:** " + Objects.requireNonNull(event.getInvite().getInviter()).getName() + "\n" +
                 "**Einladung:** " + event.getInvite().getCode());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
@@ -169,6 +192,8 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Invite Delete");
         eb.setDescription("**Einladung:** " + event.getCode());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 }

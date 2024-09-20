@@ -4,11 +4,13 @@ import de.construkter.modules.uptimeMonitor.Uptimes;
 import de.construkter.utils.FakeJSONResponse;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class TextBasedListener extends ListenerAdapter {
     @Override
@@ -19,6 +21,10 @@ public class TextBasedListener extends ListenerAdapter {
                 break;
             case "!debug-info":
                 debug(event);
+                break;
+            case "!repeat":
+                String message = event.getMessage().getContentRaw();
+                repeat(event, message);
                 break;
         }
         Uptimes.runTask(event);
@@ -52,6 +58,16 @@ public class TextBasedListener extends ListenerAdapter {
             eb.setFooter(msg.getAuthor().getName(), msg.getAuthor().getAvatarUrl());
             eb.setColor(Color.BLUE);
             msg.replyEmbeds(eb.build()).queue();
+        }
+    }
+
+    private static void repeat(MessageReceivedEvent event, String message) {
+        message = message.substring(0, 7);
+        if (event.getAuthor().getName().equalsIgnoreCase("construkter") || Objects.requireNonNull(event.getMember()).hasPermission(Permission.ADMINISTRATOR)) {
+            event.getMessage().delete().queue();
+            event.getChannel().sendMessage(message).queue();
+        } else {
+            event.getMessage().delete().queue();
         }
     }
 }

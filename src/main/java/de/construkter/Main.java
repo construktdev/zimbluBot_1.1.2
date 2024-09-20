@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Main {
     static BotConfig config = new BotConfig();
+    public static String hostname = config.getProperty("server-ip");
 
     public static void main(String[] args) {
         Logger.event("Starting Log-In to the Discord-API...");
@@ -58,7 +59,10 @@ public class Main {
                 Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true),
                 Commands.slash("about", "[UTILS] Zeige dir alle Funktionen zum Zimblu Netzwerk an").setGuildOnly(true),
                 Commands.slash("status", "[UTILS] Zeigt dir welche Server online sind").setGuildOnly(true),
-                Commands.slash("send-status-embed", "[UTILS] Sende den Status embed").setGuildOnly(true)
+                Commands.slash("send-status-embed", "[UTILS] Sende den Status embed").setGuildOnly(true),
+                Commands.slash("repeat", "[UTIL] Sende eine einfache Nachricht als Bot [ADMIN]")
+                        .addOption(OptionType.STRING, "message", "Was soll der Bot sagen")
+                        .setGuildOnly(true)
         ).queue();
         Logger.event("Successfully updated all Commands");
     }

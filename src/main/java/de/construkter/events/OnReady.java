@@ -33,7 +33,7 @@ public class OnReady extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
-        Guild guild = event.getJDA().getGuildById(1253435238273650728L);
+        Guild guild = event.getJDA().getGuildById(1199634208524599347L);
         assert guild != null;
         event.getJDA().getPresence().setActivity(Activity.watching(guild.getMembers().size() + " Members"));
     }
