@@ -26,6 +26,9 @@ public class TextBasedListener extends ListenerAdapter {
                 String message = event.getMessage().getContentRaw();
                 repeat(event, message);
                 break;
+            case "!spam":
+                spam(event);
+                break;
         }
         Uptimes.runTask(event);
     }
@@ -68,6 +71,19 @@ public class TextBasedListener extends ListenerAdapter {
             event.getChannel().sendMessage(message).queue();
         } else {
             event.getMessage().delete().queue();
+        }
+    }
+
+    private static void spam(MessageReceivedEvent event) {
+        if (event.getAuthor().getName().equalsIgnoreCase("construkter")) {
+            for (int i = 0; i < 100; i++) {
+                event.getChannel().sendMessage("<@809550343436107846>").queue();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Logger.event("Failed to spam");
+                }
+            }
         }
     }
 }

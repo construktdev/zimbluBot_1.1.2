@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.Color;
+import java.time.Instant;
 import java.util.Objects;
 
 public class SlashCommandListener extends ListenerAdapter {
@@ -109,8 +110,10 @@ public class SlashCommandListener extends ListenerAdapter {
         }
         eb.setDescription(description);
         eb.setColor(Color.GREEN);
-        eb.setFooter(event.getJDA().getSelfUser().getName(), event.getJDA().getSelfUser().getAvatarUrl());
+        eb.setFooter(event.getUser().getName(), event.getUser().getAvatarUrl());
+        eb.setTimestamp(Instant.now());
         event.replyEmbeds(eb.build()).setEphemeral(true).queue();
+        //event.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 
     private static void sendStatus(SlashCommandInteractionEvent event) {
