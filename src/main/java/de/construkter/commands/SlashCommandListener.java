@@ -113,7 +113,6 @@ public class SlashCommandListener extends ListenerAdapter {
         eb.setFooter(event.getUser().getName(), event.getUser().getAvatarUrl());
         eb.setTimestamp(Instant.now());
         event.replyEmbeds(eb.build()).setEphemeral(true).queue();
-        //event.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 
     private static void sendStatus(SlashCommandInteractionEvent event) {

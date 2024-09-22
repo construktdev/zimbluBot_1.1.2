@@ -19,19 +19,4 @@ public class Timestamp {
             return "[!] Time Error:\n" + e.getMessage();
         }
     }
-
-    public static String getTimestamp(boolean formatted, boolean colored) {
-        String var10000;
-        if (formatted && colored) {
-            var10000 = ColorManager.CYAN;
-            return var10000 + "[" + ColorManager.BLUE + getTime() + ColorManager.CYAN + "]";
-        } else if (formatted && !colored) {
-            return "[" + getTime() + "]";
-        } else if (!formatted && colored) {
-            var10000 = ColorManager.BLUE;
-            return var10000 + getTime();
-        } else {
-            return getTime();
-        }
-    }
 }

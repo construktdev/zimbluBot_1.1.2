@@ -50,12 +50,6 @@ public class Main {
                 Commands.slash("send-panel", "[TICKETS] Sende ein neues ticket Panel im aktuellen Channel [ADMIN]").setGuildOnly(true),
                 Commands.slash("help", "[UTILS] Gibt dir einen Überblick an Befehlen").setGuildOnly(true),
                 Commands.slash("stats", "[UTILS] Zeigt dir ein paar Infos über den Bot").setGuildOnly(true),
-                Commands.slash("reaction-role", "[RR] Setzt eine neue Reaktionsnachricht [ADMIN]")
-                        .addOption(OptionType.STRING, "message", "Die Nachrichten ID wo reagiert werden soll")
-                        .addOption(OptionType.CHANNEL, "channel", "Der Kanal wo sich die Nachricht befindet")
-                        .addOption(OptionType.ROLE, "role", "Die Rolle die Nutzer bekommen sollen")
-                        .addOption(OptionType.STRING, "emoji", "Der Emoji (KEINE DISCORD EMOJIS)")
-                        .setGuildOnly(true),
                 Commands.slash("embed", "[UTILS] Erstelle einen Embed und sende ihn [ADMIN]").setGuildOnly(true),
                 Commands.slash("close", "[TICKETS] Schließe das aktuelle Ticket").setGuildOnly(true),
                 Commands.slash("close-request", "[TICKETS] Frage an das aktuelle Ticket zu schließen").setGuildOnly(true),
