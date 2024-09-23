@@ -2,7 +2,10 @@ package de.construkter.modules.logging;
 
 import de.construkter.ressources.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
@@ -20,9 +23,11 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,15 +37,14 @@ public class LoggingListener extends ListenerAdapter {
     EmbedBuilder eb = new EmbedBuilder();
     BotConfig config = new BotConfig();
 
-    private final Map<String, String> messageCache = new HashMap<>();
+    private final Map<String, Message> messageCache = new HashMap<>();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         Message message = event.getMessage();
         String messageId = message.getId();
-        String messageContent = message.getContentRaw();
 
-        messageCache.put(messageId, messageContent);
+        messageCache.put(messageId, event.getMessage());
     }
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {
@@ -48,12 +52,12 @@ public class LoggingListener extends ListenerAdapter {
         assert logChannel != null;
         Message message = event.getMessage();
         String contentNew = event.getMessage().getContentRaw();
-        String contentOld = message.getContentDisplay();
+        String contentOld = messageCache.get(message.getId()).getContentRaw();
         eb.setTitle("Nachricht bearbeitet");
         eb.setDescription("**User: ** " + event.getAuthor().getName() + "\n" +
                 "**Kanal: ** " + event.getChannel().getName() + "\n" +
-                "**Davor: ** " + contentNew + "\n" +
-                "**Nachher: ** " + contentOld);
+                "**Davor: ** " + contentOld + "\n" +
+                "**Nachher: ** " + contentNew);
         eb.setFooter(event.getAuthor().getName(), event.getAuthor().getAvatarUrl());
         eb.setTimestamp(Instant.now());
         logChannel.sendMessageEmbeds(eb.build()).queue();
@@ -64,22 +68,47 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         String messageId = event.getMessageId();
 
+        String[] users = getPeoples(event, messageId); // Neue Methode zum Absender und Löscher finden
+
         if (messageCache.containsKey(messageId)) {
-            String deletedMessageContent = messageCache.get(messageId);
+            String deletedMessageContent = messageCache.get(messageId).getContentRaw();
             eb.setTitle("Nachricht gelöscht");
-            eb.setDescription("**User:** null" + "\n" +
-                    "**Kanal: ** " + event.getChannel().getName() + "\n" +
-                    "**Nachricht: ** " + deletedMessageContent);
+            eb.setDescription("**User:** " + users[0] + "\n" +
+                    "**Löscher:** " + users[1] + "\n" +
+                    "**Kanal:** " + event.getChannel().getName() + "\n" +
+                    "**Nachricht:** " + deletedMessageContent);
         } else {
             eb.setTitle("Nachricht gelöscht");
-            eb.setDescription("**User: ** null" + "\n" +
-                    "**Kanal: ** " + event.getChannel().getName() + "\n" +
-                    "**Nachricht: ** " + " Message wasn't cached");
+            eb.setDescription("**User:** " + users[0] + "\n" +
+                    "**Löscher:** " + users[1] + "\n" +
+                    "**Kanal:** " + event.getChannel().getName() + "\n" +
+                    "**Nachricht:** " + "Message wasn't cached");
         }
+        eb.setFooter(event.getJDA().getSelfUser().getName(), event.getJDA().getSelfUser().getAvatarUrl());
         eb.setTimestamp(Instant.now());
         assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
+
+    private String[] getPeoples(MessageDeleteEvent event, String messageId) {
+        String[] result = new String[2];
+        result[0] = "Unbekannt";
+        result[1] = "Unbekannt";
+
+        if (messageCache.containsKey(messageId)) {
+            result[0] = messageCache.get(messageId).getAuthor().getName();
+        } else {
+            result[0] = "Nicht im Cache";
+        }
+
+        AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs().type(ActionType.MESSAGE_DELETE);
+        logs.complete().stream()
+                .filter(entry -> entry.getTargetIdLong() == event.getChannel().getIdLong())
+                .findFirst().ifPresent(logEntry -> result[1] = Objects.requireNonNull(logEntry.getUser()).getName());
+
+        return result;
+    }
+
 
     @Override
     public void onChannelCreate(ChannelCreateEvent event) {
