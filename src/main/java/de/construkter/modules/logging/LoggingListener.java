@@ -3,9 +3,7 @@ package de.construkter.modules.logging;
 import de.construkter.ressources.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
@@ -24,10 +22,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -68,7 +66,7 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         String messageId = event.getMessageId();
 
-        String[] users = getPeoples(event, messageId); // Neue Methode zum Absender und Löscher finden
+        String[] users = getPeoples(event, messageId);
 
         if (messageCache.containsKey(messageId)) {
             String deletedMessageContent = messageCache.get(messageId).getContentRaw();
@@ -90,6 +88,7 @@ public class LoggingListener extends ListenerAdapter {
         logChannel.sendMessageEmbeds(eb.build()).queue();
     }
 
+    @NotNull
     private String[] getPeoples(MessageDeleteEvent event, String messageId) {
         String[] result = new String[2];
         result[0] = "Unbekannt";
