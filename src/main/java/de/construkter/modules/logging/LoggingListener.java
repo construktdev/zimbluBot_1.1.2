@@ -3,6 +3,7 @@ package de.construkter.modules.logging;
 import de.construkter.ressources.BotConfig;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -43,6 +44,9 @@ public class LoggingListener extends ListenerAdapter {
         String messageId = message.getId();
 
         messageCache.put(messageId, event.getMessage());
+
+        //presence update
+        event.getJDA().getPresence().setActivity(Activity.watching(event.getJDA().getUsers().size() + " Members"));
     }
     @Override
     public void onMessageUpdate(MessageUpdateEvent event) {

@@ -69,7 +69,7 @@ public class Uptimes {
                     }
             );
         } else {
-            System.out.println("Channel not found!");
+            Logger.error("Channel not found!");
         }
     }
 

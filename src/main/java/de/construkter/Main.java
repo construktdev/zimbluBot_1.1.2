@@ -2,7 +2,6 @@ package de.construkter;
 
 import de.construkter.commands.SlashCommandListener;
 import de.construkter.commands.TextBasedListener;
-import de.construkter.events.MemberEvent;
 import de.construkter.events.OnReady;
 import de.construkter.modules.automod.MessageListener;
 import de.construkter.modules.embedBuilder.CommandListener;
@@ -16,6 +15,9 @@ import de.construkter.utils.JavaUtils;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -27,8 +29,9 @@ public class Main extends JavaUtils {
 
     public static void main(String[] args) {
         Logger.event("Starting Log-In to the Discord-API...");
+        JDA jda = null;
         try {
-            JDA jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
+            jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                     .addEventListeners(new OnReady())
                     .addEventListeners(new TicketPanel())
@@ -39,7 +42,6 @@ public class Main extends JavaUtils {
                     .addEventListeners(new CloseCommand())
                     .addEventListeners(new TempChannels())
                     .addEventListeners(new VoiceListener())
-                    .addEventListeners(new MemberEvent())
                     .addEventListeners(new ChannelPermissionManager())
                     .addEventListeners(new CloseRequest())
                     .addEventListeners(new TextBasedListener())
@@ -67,6 +69,18 @@ public class Main extends JavaUtils {
             err("Fehler beim starten des Bots");
             exit(1);
         }
+        int[] members = getMembers(jda);
+        Logger.event(members[0] + " Members (for)");
+        Logger.event(members[1] + " Members (guild)");
+    }
 
+    public static int[] getMembers(JDA api) {
+        int[] count = new int[2];
+        for (User user : api.getUsers()) {
+            count[0]++;
+        }
+        Guild guild = api.getGuildById("1253435238273650728");
+        count[1] = guild.getMembers().size();
+        return count;
     }
 }
