@@ -80,6 +80,7 @@ public class Main extends JavaUtils {
             count[0]++;
         }
         Guild guild = api.getGuildById("1253435238273650728");
+        assert guild == api.getGuildById("1253435238273650728");
         count[1] = guild.getMembers().size();
         return count;
     }
