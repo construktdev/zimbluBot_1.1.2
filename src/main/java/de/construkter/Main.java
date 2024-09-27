@@ -23,15 +23,18 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
+import java.util.EnumSet;
+
 public class Main extends JavaUtils {
     static BotConfig config = new BotConfig();
     public static String hostname = config.getProperty("server-ip");
+    EnumSet<GatewayIntent> intents = EnumSet.allOf(GatewayIntent.class);
 
-    public static void main(String[] args) {
+    public void bot() {
         Logger.event("Starting Log-In to the Discord-API...");
         JDA jda = null;
         try {
-            jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES)
+            jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.GUILD_MESSAGES)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                     .addEventListeners(new OnReady())
                     .addEventListeners(new TicketPanel())
@@ -47,7 +50,7 @@ public class Main extends JavaUtils {
                     .addEventListeners(new TextBasedListener())
                     .addEventListeners(new LoggingListener())
                     .addEventListeners(new MessageListener())
-                    .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
+                    .enableIntents(this.intents)
                     .build();
             Logger.event("Updating Commands");
             jda.updateCommands().addCommands(
@@ -69,19 +72,10 @@ public class Main extends JavaUtils {
             err("Fehler beim starten des Bots");
             exit(1);
         }
-        int[] members = getMembers(jda);
-        Logger.event(members[0] + " Members (for)");
-        Logger.event(members[1] + " Members (guild)");
     }
 
-    public static int[] getMembers(JDA api) {
-        int[] count = new int[2];
-        for (User user : api.getUsers()) {
-            count[0]++;
-        }
-        Guild guild = api.getGuildById("1253435238273650728");
-        assert guild == api.getGuildById("1253435238273650728");
-        count[1] = guild.getMembers().size();
-        return count;
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.bot();
     }
 }
