@@ -14,15 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public class OnReady extends ListenerAdapter {
+    BotConfig config = new BotConfig();
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        BotConfig config = new BotConfig();
         Logger.event("Bot is ready!");
         Logger.event(event.getJDA().getInviteUrl());
         System.out.println("");
         Logger.event("Servers: " + event.getJDA().getGuilds().size());
         Logger.event("Status: " + event.getJDA().getStatus());
         Logger.event(ColorManager.BOLD + "Loading Done!");
+
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("🧾 • ZimbluBot Logging");
         eb.setDescription("Bot loaded and is ready");
@@ -33,7 +34,8 @@ public class OnReady extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();
-        Guild guild = event.getJDA().getGuildById(1199634208524599347L);
+
+        Guild guild = event.getJDA().getGuildById("1199634208524599347");
         assert guild != null;
         event.getJDA().getPresence().setActivity(Activity.watching(guild.getMembers().size() + " Members"));
     }

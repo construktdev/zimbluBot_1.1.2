@@ -1,5 +1,6 @@
 package de.construkter.ressources;
 
+import de.construkter.utils.JavaUtils;
 import de.construkter.utils.Logger;
 
 import java.io.BufferedReader;
@@ -18,6 +19,10 @@ public class RolesConfig {
 
     private void loadProperties() {
         String fileName = "roles.txt";
+        readFile(fileName, properties);
+    }
+
+    public static void readFile(String fileName, Properties properties) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -33,7 +38,7 @@ public class RolesConfig {
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.error("Failed to read the file " + fileName + ": \n" + ex.getMessage());
         }
     }
 

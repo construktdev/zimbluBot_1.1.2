@@ -8,6 +8,7 @@ import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
 import de.construkter.modules.logging.LoggingListener;
 import de.construkter.modules.tempChannels.TempChannels;
+import de.construkter.modules.tempChannels.TempChannelsChecker;
 import de.construkter.modules.tempChannels.VoiceListener;
 import de.construkter.modules.ticket.*;
 import de.construkter.ressources.BotConfig;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.EnumSet;
@@ -51,7 +53,12 @@ public class Main extends JavaUtils {
                     .addEventListeners(new LoggingListener())
                     .addEventListeners(new MessageListener())
                     .enableIntents(this.intents)
+                    .setRawEventsEnabled(true)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .setEnabledIntents(this.intents)
                     .build();
+            TempChannelsChecker checker = new TempChannelsChecker();
+            //checker.startChannelChecker(jda);
             Logger.event("Updating Commands");
             jda.updateCommands().addCommands(
                     Commands.slash("send-panel", "[TICKETS] Sende ein neues ticket Panel im aktuellen Channel [ADMIN]").setGuildOnly(true),

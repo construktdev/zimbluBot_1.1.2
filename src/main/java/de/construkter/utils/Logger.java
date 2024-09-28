@@ -6,6 +6,6 @@ public class Logger extends JavaUtils{
     }
 
     public static void error(String message) {
-        println(ColorManager.RED + " [!] " + ColorManager.GREEN + message);
+        event(ColorManager.RED + " [!] " +  message);
     }
 }

@@ -81,7 +81,7 @@ public class TextBasedListener extends ListenerAdapter {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                    Logger.event("Failed to spam");
+                    Logger.error("Failed to spam");
                 }
             }
         }
