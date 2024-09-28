@@ -7,18 +7,12 @@ import de.construkter.modules.automod.MessageListener;
 import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
 import de.construkter.modules.logging.LoggingListener;
-import de.construkter.modules.tempChannels.TempChannels;
-import de.construkter.modules.tempChannels.TempChannelsChecker;
-import de.construkter.modules.tempChannels.VoiceListener;
 import de.construkter.modules.ticket.*;
 import de.construkter.ressources.BotConfig;
 import de.construkter.utils.JavaUtils;
 import de.construkter.utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -45,8 +39,6 @@ public class Main extends JavaUtils {
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new ModalListener())
                     .addEventListeners(new CloseCommand())
-                    .addEventListeners(new TempChannels())
-                    .addEventListeners(new VoiceListener())
                     .addEventListeners(new ChannelPermissionManager())
                     .addEventListeners(new CloseRequest())
                     .addEventListeners(new TextBasedListener())
@@ -57,8 +49,6 @@ public class Main extends JavaUtils {
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setEnabledIntents(this.intents)
                     .build();
-            TempChannelsChecker checker = new TempChannelsChecker();
-            //checker.startChannelChecker(jda);
             Logger.event("Updating Commands");
             jda.updateCommands().addCommands(
                     Commands.slash("send-panel", "[TICKETS] Sende ein neues ticket Panel im aktuellen Channel [ADMIN]").setGuildOnly(true),
