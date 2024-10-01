@@ -27,8 +27,12 @@ public class OnReady extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("🧾 • ZimbluBot Logging");
         eb.setDescription("Bot loaded and is ready");
-        eb.addField("Benutzer", "Internal Event", true);
-        eb.addField("Channel", "Internal Event", true);
+        eb.addField("Gateway-Ping", event.getJDA().getGatewayPing() + "ms", true);
+        eb.addField("Intents", event.getJDA().getGatewayIntents().toString(), true);
+        eb.addField("Shards", event.getJDA().getShardInfo().getShardString(), true);
+        eb.addField("Users", event.getJDA().getUsers().size() + "", true);
+        eb.addField("Guilds", event.getJDA().getGuilds().size() + "", true);
+        eb.addField("Eingeloggt als" , event.getJDA().getSelfUser().getAsTag(), true);
         eb.setColor(Color.BLUE);
         eb.setFooter("\uD83E\uDD16 • ZimbluBot Logger", event.getJDA().getSelfUser().getAvatarUrl());
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
