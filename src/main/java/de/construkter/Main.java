@@ -7,6 +7,7 @@ import de.construkter.modules.automod.MessageListener;
 import de.construkter.modules.embedBuilder.CommandListener;
 import de.construkter.modules.embedBuilder.ModalListener;
 import de.construkter.modules.logging.LoggingListener;
+import de.construkter.modules.tempchannels.VoiceListener;
 import de.construkter.modules.ticket.*;
 import de.construkter.ressources.BotConfig;
 import de.construkter.utils.JavaUtils;
@@ -30,8 +31,8 @@ public class Main extends JavaUtils {
         Logger.event("Starting Log-In to the Discord-API...");
         JDA jda = null;
         try {
-            jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.GUILD_MESSAGES)
-                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
+            jda = JDABuilder.create(config.getProperty("token"), GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS)
+                    .disableCache(CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS, CacheFlag.SCHEDULED_EVENTS)
                     .addEventListeners(new OnReady())
                     .addEventListeners(new TicketPanel())
                     .addEventListeners(new OpenTicket())
@@ -44,10 +45,10 @@ public class Main extends JavaUtils {
                     .addEventListeners(new TextBasedListener())
                     .addEventListeners(new LoggingListener())
                     .addEventListeners(new MessageListener())
-                    .enableIntents(this.intents)
+                    .addEventListeners(new VoiceListener())
                     .setRawEventsEnabled(true)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
-                    .setEnabledIntents(this.intents)
+                    .enableCache(CacheFlag.VOICE_STATE) //Danke Miraculixx
                     .build();
             Logger.event("Updating Commands");
             jda.updateCommands().addCommands(
@@ -66,7 +67,7 @@ public class Main extends JavaUtils {
             ).queue();
             Logger.event("Successfully updated all Commands");
         } catch (Exception e) {
-            err("Fehler beim starten des Bots");
+            err("Fehler beim starten des Bots:\n" + e.getMessage());
             exit(1);
         }
     }
