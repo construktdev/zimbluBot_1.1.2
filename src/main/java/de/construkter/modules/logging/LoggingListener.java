@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateIconEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateOwnerEvent;
@@ -224,6 +226,26 @@ public class LoggingListener extends ListenerAdapter {
         TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
         eb.setTitle("Server Invite Delete");
         eb.setDescription("**Einladung:** " + event.getCode());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
+        logChannel.sendMessageEmbeds(eb.build()).queue();
+    }
+
+    @Override
+    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
+        eb.setTitle("Rollen geändert");
+        eb.setDescription("**User:** " + event.getMember().getEffectiveName() + "\n**Rollen:** " + event.getRoles());
+        eb.setTimestamp(Instant.now());
+        assert logChannel != null;
+        logChannel.sendMessageEmbeds(eb.build()).queue();
+    }
+
+    @Override
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+        TextChannel logChannel = event.getJDA().getTextChannelById(config.getProperty("logging-channel"));
+        eb.setTitle("Rollen geändert");
+        eb.setDescription("**User:** " + event.getMember().getEffectiveName() + "\n**Rollen:** " + event.getRoles());
         eb.setTimestamp(Instant.now());
         assert logChannel != null;
         logChannel.sendMessageEmbeds(eb.build()).queue();

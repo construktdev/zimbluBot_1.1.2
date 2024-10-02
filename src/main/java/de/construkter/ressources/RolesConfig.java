@@ -1,6 +1,5 @@
 package de.construkter.ressources;
 
-import de.construkter.utils.JavaUtils;
 import de.construkter.utils.Logger;
 
 import java.io.BufferedReader;
