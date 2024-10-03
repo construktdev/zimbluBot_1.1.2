@@ -8,11 +8,8 @@ Discord für das [Zimblu Netzwerk](https://dc.zimblu.net)
 - Ticket System
 - Configuration Datei
 - Advanced CLI Logger
-- Temporäre Sprachkanäle (join2create)
+- Temporäre Sprachkanäle (join2create) -> Nun auch mit Java
 - Discord Logging
 - Reaction Roles (nicht ganz fertig)
 - Uptime Manager
 - Status Embed mit automatischer Aktualisierung 
-
-### Geplantes
-- Mehr Commands
